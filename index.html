@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Relojes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0a1929 0%, #0d47a1 50%, #1565c0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .catalog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0d47a1, #1565c0, #1976d2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .watch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 40px 30px;
+        }
+        
+        .watch-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(13, 71, 161, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+        
+        .watch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(13, 71, 161, 0.3);
+            border-color: #1976d2;
+        }
+        
+        .watch-image-container {
+            height: 450px;
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            margin: 25px 15px;
+        }
+        
+        .watch-image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 40%, rgba(13, 71, 161, 0.08) 100%);
+        }
+        
+        .watch-placeholder {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, #0d47a1, #1565c0);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .watch-image {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .watch-info {
+            padding: 25px;
+            background: white;
+        }
+        
+        .watch-name {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #0d47a1;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .watch-model {
+            font-size: 0.95em;
+            color: #1565c0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 400;
+        }
+        
+        .watch-price {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #0d47a1;
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .add-watch-btn {
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(13, 71, 161, 0.4);
+        }
+        
+        .add-watch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 71, 161, 0.5);
+        }
+        
+        .footer {
+            background: #0d47a1;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-weight: 300;
+        }
+        
+            @media (max-width: 768px) {
+            .watch-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .watch-image-container {
+                height: 380px;
+                margin: 20px 10px;
+            }
+            
+            .watch-placeholder {
+                width: 250px;
+                height: 250px;
+                font-size: 4.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="catalog-container">
+        <div class="header">
+            <h1>RELOJES PARA DAMA</h1>
+            <p>Colección Premium 2025</p>
+        </div>
+        
+        <div class="watch-grid" id="watchGrid">
+            <!-- Ejemplo de reloj 1 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Verde.jpg" alt="Rolex Dorado-Verde" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Verde</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de reloj 2 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Champagne.jpg" alt="Rolex Dorado-Champagne" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Champagne</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de reloj 3 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Azúl.jpg" alt="Rolex Plateado-Azúl" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Azúl</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 4 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Rojo.jpg" alt="Rolex Dorado-Rojo" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Rojo</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 5 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Azúl oscuro.png" alt="Rolex Plateado-Azúl oscuro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Azúl oscuro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 6 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Verde.png" alt="Rolex Dorado-Verde" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Verde</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 7 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Champagne.png" alt="Rolex Dorado-Champagne" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Champagne</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 8 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Azúl oscuro.png" alt="Rolex Dorado-Azúl oscuro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Azúl oscuro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 9 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Negro.png" alt="Rolex Dorado-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Negro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 10 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Champagne.png" alt="Rolex Champagne" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Champagne</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 11 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Blanco.png" alt="Rolex Plateado-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Blanco</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 12 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Negro.png" alt="Rolex Plateado-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Negro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 13 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Verde.png" alt="Rolex Plateado-Verde" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Verde</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 14 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Champagne-Negro.png" alt="Rolex Champagne-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Champagne-Negro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 15 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Gris-Negro.png" alt="Rolex Gris-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Gris-Negro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 16 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado-Verde.png" alt="Rolex Plateado-Dorado-Verde" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Verde</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 17 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado-Blanco.png" alt="Rolex Plateado-Dorado-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Blanco</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 18 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Rojo.png" alt="Rolex Dorado-Rojo" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Rojo</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de reloj 19 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado.png" alt="Rolex Plateado-Dorado" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 20 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Negro-Blanco.png" alt="Rolex Negro-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Negro-Blanco</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 21 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Plateado-Rojo.png" alt="Rolex Dorado-Plateado-Rojo" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Plateado-Rojo</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 22 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Negro1.png" alt="Rolex Dorado-Negro1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Negro1</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 23 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                     <img src="Rolex Plateado-Dorado-Negro1.png" alt="Rolex Plateado-Dorado-Negro1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Negro1</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 24 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Blanco.png" alt="Rolex Dorado-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Blanco</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 25 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Champagne1.png" alt="Rolex Dorado-Champagne1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Champagne1</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 26 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Negro2.png" alt="Rolex Dorado-Negro2" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Negro2</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 27 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado-Azúl.png" alt="Rolex Plateado-Dorado-Azúl" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Azúl</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 28 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Rojo.png" alt="Rolex Plateado-Rojo" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Rojo</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 29 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado-Champagne.png" alt="Rolex Plateado-Dorado-Champagne" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Champagne</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 30 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Champagne-Blanco.png" alt="Rolex Champagne-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Champagne-Blanco</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 31 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado-Verde1.png" alt="Rolex Plateado-Dorado-Verde1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Verde1</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 32 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Dorado-Negro.png" alt="Rolex Plateado-Dorado-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado-Negro</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 33 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Azúl oscuro1.png" alt="Rolex Dorado-Azúl oscuro1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Azúl oscuro1</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 34 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Plateado-Champagne.png" alt="Rolex Plateado-Champagne" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Champagne</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 35 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Negro-Azúl.png" alt="Rolex Negro-Azúl" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Negro-Azúl</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 36 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Negro-Rojo.png" alt="Rolex Negro-Rojo" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Negro-Rojo</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 37 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Guess Dorado-Blanco.png" alt="Guess Dorado-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Blanco</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 38 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado-Champagne2.png" alt="Rolex Dorado-Champagne2" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Champagne2</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 39 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="Rolex Dorado.png" alt="Rolex Dorado" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado</p>
+                    <div class="watch-price">$95.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 40 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado-Blanco.png" alt="QyQ Dorado-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Blanco</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 41 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Champagne-Blanco.png" alt="QyQ Champagne-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Champagne-Blanco</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 42 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Plateado-Blanco.png" alt="QyQ Plateado-Blanco" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Blanco</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 43 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado.png" alt="QyQ Dorado" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 44 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado-Plateado.png" alt="QyQ Dorado-Plateado" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Plateado</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 45 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Plateado-Dorado.png" alt="QyQ Plateado-Dorado" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Dorado</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 46 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado1.png" alt="QyQ Dorado1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado1</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 47 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado-Negro.png" alt="QyQ Dorado-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Negro</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 48 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado-Blanco1.png" alt="QyQ Dorado-Blanco1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Blanco1</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 49 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Plateado-Blanco1.png" alt="QyQ Plateado-Blanco1" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Blanco1</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 50 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Plateado-Negro.png" alt="QyQ Plateado-Negro" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Champagne-Blanco</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 51 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Plateado-Blanco2.png" alt="QyQ Plateado-Blanco2" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Plateado-Blanco2</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 52 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado-Blanco2.png" alt="QyQ Dorado-Blanco2" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Blanco2</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+
+           <!-- Ejemplo de reloj 53 -->
+            <div class="watch-card">
+                <div class="watch-image-container">
+                    <img src="QyQ Dorado-Champagne.png" alt="QyQ Dorado-Champagne" class="watch-image">
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Rolex</h3>
+                    <p class="watch-model">Dorado-Champagne</p>
+                    <div class="watch-price">$100.000</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-info">
+            <h3 class="contact-title">📞 Información de Contacto</h3>
+            <div class="contact-item">
+                <span class="contact-icon">📱</span>
+                <a href="tel:+573217346924" class="contact-link">+57 321 734 6924</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">✉️</span>
+                <a href="mailto:magpep2003@gmail.com" class="contact-link">rtempus911@gmail.com</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Catálogo de Relojes Premium | Calidad y Elegancia</p>
+        </div>
+    </div>
+
+    <script>
+        function addNewWatch() {
+            const grid = document.getElementById('watchGrid');
+            const newWatch = document.createElement('div');
+            newWatch.className = 'watch-card';
+            newWatch.innerHTML = `
+                <div class="watch-image-container">
+                    <div class="watch-placeholder">⌚</div>
+                </div>
+                <div class="watch-info">
+                    <h3 class="watch-name">Nuevo Reloj</h3>
+                    <p class="watch-model">Modelo NR-00${grid.children.length + 1}</p>
+                    <div class="watch-price">$0.00</div>
+                </div>
+            `;
+            grid.appendChild(newWatch);
+        }
+        
+        // Función para personalizar texto (doble clic para editar)
+        document.addEventListener('DOMContentLoaded', function() {
+            const editableElements = document.querySelectorAll('.watch-name, .watch-model, .watch-price');
+            
+            editableElements.forEach(element => {
+                element.addEventListener('dblclick', function() {
+                    const originalText = this.textContent;
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = originalText;
+                    input.style.width = '100%';
+                    input.style.background = 'transparent';
+                    input.style.border = '2px solid #1565c0';
+                    input.style.borderRadius = '4px';
+                    input.style.padding = '2px 5px';
+                    input.style.fontSize = window.getComputedStyle(this).fontSize;
+                    input.style.fontWeight = window.getComputedStyle(this).fontWeight;
+                    input.style.color = window.getComputedStyle(this).color;
+                    input.style.textAlign = window.getComputedStyle(this).textAlign;
+                    
+                    this.textContent = '';
+                    this.appendChild(input);
+                    input.focus();
+                    input.select();
+                    
+                    function finishEdit() {
+                        const newText = input.value || originalText;
+                        element.textContent = newText;
+                    }
+                    
+                    input.addEventListener('blur', finishEdit);
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            finishEdit();
+                        } else if (e.key === 'Escape') {
+                            element.textContent = originalText;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
